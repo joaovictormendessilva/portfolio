@@ -1,17 +1,48 @@
-export type ProjectStatus = "production" | "building";
+export type ProjectStatus = "production" | "building" | "local";
 
 export type Project = {
   slug: string;
   name: string;
   year: string;
-  liveUrl: string;
+  liveUrl?: string;
   repoUrl: string;
+  backendRepoUrl?: string;
+  demoUrl?: string;
   stack: string[];
   status: ProjectStatus;
   image?: string;
 };
 
 export const projects: Project[] = [
+  {
+    slug: "login-flow",
+    name: "Login Flow",
+    year: "2025",
+    repoUrl:
+      "https://github.com/joaovictormendessilva/login-page-drax-design-frontend",
+    backendRepoUrl:
+      "https://github.com/joaovictormendessilva/login-page-drax-design-backend",
+    demoUrl:
+      "https://github.com/joaovictormendessilva/login-page-drax-design-frontend#demo",
+    stack: [
+      "React 19",
+      "TypeScript",
+      "Vite",
+      "Tailwind CSS",
+      "TanStack Query",
+      "React Hook Form",
+      "Yup",
+      "Vitest",
+      "Testing Library",
+      "NestJS",
+      "TypeORM",
+      "PostgreSQL",
+      "JWT",
+      "bcrypt",
+    ],
+    status: "local",
+    image: "/work/login-flow.png",
+  },
   {
     slug: "fantasmo-shop",
     name: "Fantasmo Shop",

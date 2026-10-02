@@ -38,14 +38,23 @@ export const en = {
   work: {
     title: "Selected work",
     intro:
-      "Two projects, both live. Each one lists what it actually does and what it doesn't.",
+      "Three study projects. Each one lists what it actually does and what it doesn't.",
     viewLive: "Open live site",
     viewCode: "Read the code",
+    viewBackendCode: "Read the back-end code",
+    viewDemo: "Watch the demo",
     viewCase: "Read the case study",
     stackLabel: "Built with",
     limitationLabel: "Scope",
 
     projects: {
+      "login-flow": {
+        summary: "A study project: a login flow with a NestJS back end, PostgreSQL, and unit tests on the front end.",
+        detail:
+          "I wanted to practice the authentication flow with NestJS and write unit tests for front-end components. Passwords are stored as bcrypt hashes, login returns a JWT, and protected routes use a guard. On the front end, I also practiced Tailwind animations and reusable components.",
+        limitation:
+          "Not deployed: it runs locally. The repository has a demo video.",
+      },
       "fantasmo-shop": {
         summary: "A study project: a storefront with server-side authentication, a cart, and order emails.",
         detail:
@@ -71,6 +80,32 @@ export const en = {
     resultLabel: "Where it stands",
     nextLabel: "What I would change",
     studies: {
+      "login-flow": {
+        context:
+          "A study project split into two repositories: a React front end and a NestJS back end with PostgreSQL.",
+        challenge:
+          "Two goals: practice a complete authentication flow on the back end, and write unit tests for front-end components.",
+        decisions: [
+          {
+            title: "Passwords are stored as hashes",
+            body: "On sign-up, the password is hashed with bcrypt before being saved. On login, bcrypt.compare checks the typed password against the hash, and a valid login returns a JWT access token.",
+          },
+          {
+            title: "Protected routes use a guard",
+            body: "Routes marked with JwtAuthGuard only run with a valid token in the Authorization header. A JwtStrategy checks the signature and expiration, and a custom decorator gives the route the current user.",
+          },
+          {
+            title: "Unit tests on the main components",
+            body: "With Vitest and React Testing Library, I tested form validation (empty fields, invalid email, short password), the success toast, clearing the form after submit, and the button's loading state.",
+          },
+        ],
+        result:
+          "Sign-up, login and a protected route working end to end, with the form and the button covered by unit tests.",
+        next: [
+          "Protect the route that lists users. Today it doesn't require login.",
+          "Return the same message for an unknown email and a wrong password, so the API doesn't reveal which emails are registered.",
+        ],
+      },
       "fantasmo-shop": {
         context:
           "A study project. I wanted to build one complete purchase flow: login, a product list with filters, a cart, and an order email.",

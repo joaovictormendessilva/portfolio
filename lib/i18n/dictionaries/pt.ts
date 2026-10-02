@@ -40,14 +40,23 @@ export const pt: Dictionary = {
   work: {
     title: "Projetos selecionados",
     intro:
-      "Dois projetos, ambos no ar. Cada um diz o que realmente faz e o que ainda não faz.",
+      "Três projetos de estudo. Cada um diz o que realmente faz e o que ainda não faz.",
     viewLive: "Abrir site",
     viewCode: "Ver o código",
+    viewBackendCode: "Ver o código do back-end",
+    viewDemo: "Ver a demonstração",
     viewCase: "Ler o case study",
     stackLabel: "Construído com",
     limitationLabel: "Escopo",
 
     projects: {
+      "login-flow": {
+        summary: "Um projeto de estudo: um fluxo de login com back-end em NestJS, PostgreSQL e testes unitários no front-end.",
+        detail:
+          "Eu queria praticar o fluxo de autenticação com NestJS e escrever testes unitários para componentes do front-end. As senhas são salvas como hash com bcrypt, o login retorna um JWT e as rotas protegidas usam um guard. No front-end, também pratiquei animações com Tailwind e componentes reutilizáveis.",
+        limitation:
+          "Sem deploy: roda localmente. O repositório tem um vídeo de demonstração.",
+      },
       "fantasmo-shop": {
         summary: "Um projeto de estudo: uma loja com autenticação no servidor, carrinho e e-mail de pedido.",
         detail:
@@ -73,6 +82,32 @@ export const pt: Dictionary = {
     resultLabel: "Onde está hoje",
     nextLabel: "O que eu mudaria",
     studies: {
+      "login-flow": {
+        context:
+          "Um projeto de estudo dividido em dois repositórios: um front-end em React e um back-end em NestJS com PostgreSQL.",
+        challenge:
+          "Dois objetivos: praticar um fluxo de autenticação completo no back-end e escrever testes unitários para componentes do front-end.",
+        decisions: [
+          {
+            title: "As senhas são salvas como hash",
+            body: "No cadastro, a senha passa pelo bcrypt antes de ser salva. No login, o bcrypt.compare compara a senha digitada com o hash, e um login válido retorna um access token JWT.",
+          },
+          {
+            title: "Rotas protegidas usam um guard",
+            body: "Rotas marcadas com JwtAuthGuard só executam com um token válido no header Authorization. Uma JwtStrategy verifica a assinatura e a expiração, e um decorator próprio entrega à rota o usuário atual.",
+          },
+          {
+            title: "Testes unitários nos componentes principais",
+            body: "Com Vitest e React Testing Library, testei a validação do formulário (campos vazios, e-mail inválido, senha curta), o toast de sucesso, a limpeza do formulário após o envio e o estado de carregamento do botão.",
+          },
+        ],
+        result:
+          "Cadastro, login e uma rota protegida funcionando de ponta a ponta, com o formulário e o botão cobertos por testes unitários.",
+        next: [
+          "Proteger a rota que lista os usuários. Hoje ela não exige login.",
+          "Retornar a mesma mensagem para e-mail não cadastrado e senha errada, para a API não revelar quais e-mails existem.",
+        ],
+      },
       "fantasmo-shop": {
         context:
           "Um projeto de estudo. Eu queria construir um fluxo de compra completo: login, lista de produtos com filtros, carrinho e e-mail de pedido.",

@@ -65,15 +65,17 @@ export default async function CaseStudyPage({
             <p className="mt-3 text-lg leading-relaxed">{copy.summary}</p>
 
             <div className="mt-5 flex flex-wrap items-center gap-x-6 gap-y-3 text-sm">
-              <a
-                href={project.liveUrl}
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex items-center gap-1 font-medium text-brass underline decoration-transparent underline-offset-4 transition hover:decoration-brass"
-              >
-                {dict.work.viewLive}
-                <ArrowUpRight size={14} aria-hidden />
-              </a>
+              {project.liveUrl ? (
+                <a
+                  href={project.liveUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-1 font-medium text-brass underline decoration-transparent underline-offset-4 transition hover:decoration-brass"
+                >
+                  {dict.work.viewLive}
+                  <ArrowUpRight size={14} aria-hidden />
+                </a>
+              ) : null}
               <a
                 href={project.repoUrl}
                 target="_blank"
@@ -83,6 +85,28 @@ export default async function CaseStudyPage({
                 {dict.work.viewCode}
                 <ArrowUpRight size={14} aria-hidden />
               </a>
+              {project.backendRepoUrl ? (
+                <a
+                  href={project.backendRepoUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-1 text-muted underline decoration-line underline-offset-4 transition-colors hover:text-fg"
+                >
+                  {dict.work.viewBackendCode}
+                  <ArrowUpRight size={14} aria-hidden />
+                </a>
+              ) : null}
+              {project.demoUrl ? (
+                <a
+                  href={project.demoUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-1 text-muted underline decoration-line underline-offset-4 transition-colors hover:text-fg"
+                >
+                  {dict.work.viewDemo}
+                  <ArrowUpRight size={14} aria-hidden />
+                </a>
+              ) : null}
             </div>
           </header>
 

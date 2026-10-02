@@ -100,15 +100,17 @@ function WorkBand({ project, copy, dict, lang, reversed }: WorkBandProps) {
           >
             {dict.work.viewCase}
           </Link>
-          <a
-            href={project.liveUrl}
-            target="_blank"
-            rel="noreferrer"
-            className="inline-flex items-center gap-1 text-muted underline decoration-line underline-offset-4 transition-colors hover:text-fg"
-          >
-            {dict.work.viewLive}
-            <ArrowUpRight size={14} aria-hidden />
-          </a>
+          {project.liveUrl ? (
+            <a
+              href={project.liveUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-1 text-muted underline decoration-line underline-offset-4 transition-colors hover:text-fg"
+            >
+              {dict.work.viewLive}
+              <ArrowUpRight size={14} aria-hidden />
+            </a>
+          ) : null}
           <a
             href={project.repoUrl}
             target="_blank"
@@ -118,6 +120,28 @@ function WorkBand({ project, copy, dict, lang, reversed }: WorkBandProps) {
             {dict.work.viewCode}
             <ArrowUpRight size={14} aria-hidden />
           </a>
+          {project.backendRepoUrl ? (
+            <a
+              href={project.backendRepoUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-1 text-muted underline decoration-line underline-offset-4 transition-colors hover:text-fg"
+            >
+              {dict.work.viewBackendCode}
+              <ArrowUpRight size={14} aria-hidden />
+            </a>
+          ) : null}
+          {project.demoUrl ? (
+            <a
+              href={project.demoUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-1 text-muted underline decoration-line underline-offset-4 transition-colors hover:text-fg"
+            >
+              {dict.work.viewDemo}
+              <ArrowUpRight size={14} aria-hidden />
+            </a>
+          ) : null}
         </div>
       </div>
     </article>
