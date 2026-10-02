@@ -8,9 +8,9 @@ export const en = {
   },
 
   meta: {
-    title: "João Victor Mendes Silva — Full Stack Developer",
+    title: "João Victor Mendes Silva — Frontend Engineer",
     description:
-      "Full stack developer with seven years building for the web, the last three in React and React Native. Available for remote work.",
+      "Frontend engineer with seven years building for the web, the last three in the React ecosystem, now expanding into full stack development.",
   },
 
   theme: {
@@ -26,10 +26,10 @@ export const en = {
 
   hero: {
     name: "João Victor Mendes Silva",
-    role: "Full Stack Developer",
+    role: "Frontend Engineer",
     headline: "Rebuilding systems that can't afford to break.",
-    lede: "Seven years building for the web, the last three entirely in React and React Native. I moved consórcio platforms for Banco do Brasil, Porto Seguro and Magazine Luiza off .NET, I've led the front-end architecture on every team I've worked with, and I now build the back end as well.",
-    location: "Linhares, Brazil — working remotely",
+    lede: "Seven years building for the web, the last three in the React ecosystem. I own the front-end architecture of new production systems at a U.S. energy manufacturer, worked on moving consortium platforms for Magazine Luiza, Porto Seguro and Banco do Brasil off .NET, and I'm now expanding into the back end with NestJS and PostgreSQL.",
+    location: "Linhares, Brazil (UTC−3)",
     english: "English B2 (EF SET)",
     primaryAction: "Read the work",
     secondaryAction: "Email me",
@@ -47,18 +47,18 @@ export const en = {
 
     projects: {
       "fantasmo-shop": {
-        summary: "A storefront with session auth, a cart, and order emails.",
+        summary: "A study project: a storefront with server-side authentication, a cart, and order emails.",
         detail:
-          "Sessions are built from scratch rather than pulled from a library: tokens are signed with jose, kept in an httpOnly cookie, and verified on every protected route by Next 16's proxy, which clears the cookie when a token fails. Completed orders render as React Email templates and go out over SMTP through Nodemailer.",
+          "I wanted to understand how Next.js can handle real authentication, validating the session token on the server without exposing it to the browser. Protected routes send users without a valid session back to the login page. Order emails are built as a React component and sent through my own SMTP setup, without an external email service.",
         limitation:
-          "Built without a database, so the catalogue is static and credential verification is stubbed for the demo. Postgres with a real user table and hashed password comparison is the next step.",
+          "There is no database yet: the product list is static, and any non-empty email and password will log you in.",
       },
       "pulse-ai": {
-        summary: "A product landing page for a fictional AI workspace.",
+        summary: "A landing page built from a ready-made design, to practice Tailwind and responsive layouts.",
         detail:
-          "The dashboard in the hero is not a screenshot. Every bar, row, notification and avatar is markup styled with Tailwind, so it stays sharp at any resolution and rearranges itself on small screens instead of shrinking as a flat image.",
+          "I built this page to get more practice with Tailwind and responsive layouts. I followed a design made in Visily as closely as I could, as if a design team had handed it to me. The dashboard in the hero is built with Tailwind classes, not an image.",
         limitation:
-          "Front end only: there is no back end behind it, and the figures shown are illustrative.",
+          "Front end only: there is no back end, and the content and numbers are fictional.",
       },
     },
   },
@@ -73,55 +73,49 @@ export const en = {
     studies: {
       "fantasmo-shop": {
         context:
-          "A storefront built to exercise one complete purchase flow end to end: catalogue, filtering, cart, an authenticated session, and an order that actually leaves the system instead of stopping at a console log.",
+          "A study project. I wanted to build one complete purchase flow: login, a product list with filters, a cart, and an order email.",
         challenge:
-          "The catalogue was never the interesting part. The session was. I wanted route protection that happens on the server before a page renders, a token the page's own JavaScript cannot read, and a completed order that produces something a customer would receive.",
+          "The main goal was authentication. I wanted the session token to be validated on the server, without the browser having access to it, and users without a valid session to be sent back to the login page.",
         decisions: [
           {
-            title: "Session handling written by hand",
-            body: "I signed and verified the token myself with jose instead of installing a drop-in auth library, because the point was to understand each moving part: what goes in the payload, how expiry is set, which cookie flags matter, and what should happen when verification fails. jose is promise-based and built on Web Crypto, so it behaves the same in any runtime.",
+            title: "The token stays in an httpOnly cookie",
+            body: "The browser's JavaScript can't read it. The token is signed with jose and checked in proxy.ts before protected pages load. If it is invalid, the cookie is removed and the user goes back to the login page.",
           },
           {
-            title: "The token lives in an httpOnly cookie",
-            body: "Not localStorage. Script running on the page cannot read an httpOnly cookie, which closes the most common path for stealing a session through XSS. It is also marked secure in production, scoped with sameSite lax, and expires in seven days.",
-          },
-          {
-            title: "One place decides who gets in",
-            body: "Route protection sits in proxy.ts, so matched routes are checked before anything renders. A token that fails verification does not just get rejected: the cookie is deleted on the way out, so the browser stops presenting a credential that will never work again.",
-          },
-          {
-            title: "The order email is a component, not a string",
-            body: "Confirmation emails render as React Email templates rather than HTML concatenated inside a service. The email is typed, reviewable in a pull request and versioned with the rest of the interface, which is what makes it maintainable.",
+            title: "Order emails without an external service",
+            body: "The email template is a React component, built like a page of the site. It is rendered to HTML and sent through my own SMTP setup with Nodemailer, so the project doesn't depend on an external email service.",
           },
         ],
         result:
-          "Login, a protected dashboard, a filterable catalogue, a cart, and an order that arrives as a formatted email over SMTP.",
+          "Login, a protected dashboard, a product list with filters, a cart, and an order confirmation email.",
         next: [
-          "Add Postgres and a real user table, so credentials are compared against hashed passwords instead of being stubbed for the demo. bcryptjs is already a dependency; it is not wired up yet.",
-          "Fail fast when JWT_SECRET is missing. Today it falls back to an empty string and only logs a warning, which means a misconfigured deploy would sign tokens that anyone could forge. It should throw at boot instead.",
-          "Verify the session inside each route handler, not only in proxy. Next's own documentation warns that a matcher change can silently remove proxy coverage, and a single point of enforcement is a single point of failure.",
+          "Check users and load products from a PostgreSQL database.",
         ],
       },
       "pulse-ai": {
         context:
-          "A landing page for a fictional AI workspace, built to practise the genre properly: hero, capabilities, metrics, social proof, pricing, FAQ and closing call to action.",
+          "A landing page for a fictional AI product, with a hero, features, metrics, testimonials, pricing, FAQ and a call to action.",
         challenge:
-          "The hero needed a product shot and there was no product. Exporting a flat image would have been the quick answer, and it would have looked wrong on half the screens that loaded it.",
+          "Two goals: get comfortable with Tailwind, and make every section work well from mobile to desktop while staying faithful to the design.",
         decisions: [
           {
-            title: "The dashboard is markup, not a picture",
-            body: "Every bar, activity row, notification card and avatar in the hero is a real element styled with Tailwind. It stays sharp on any display, adds nothing to download, and rearranges itself on a narrow screen rather than shrinking into something unreadable.",
+            title: "Follow the design as if it came from a design team",
+            body: "I treated the Visily design as the reference and tried to match spacing, colors and layout instead of improvising.",
           },
           {
-            title: "The illustration is composed, not one block",
-            body: "Each piece of it is its own component, so the hero reads as a small tree of named parts instead of a single unmanageable stretch of JSX. Changing one bar in the chart does not mean scrolling through the whole page.",
+            title: "Small reusable components",
+            body: "Buttons, cards, chips, section titles and the page container are shared components, so every section is built from the same pieces.",
+          },
+          {
+            title: "The hero dashboard is made with Tailwind",
+            body: "Instead of a screenshot, the illustration in the hero is built with HTML and Tailwind classes, so it stays sharp and adapts to smaller screens.",
           },
         ],
         result:
-          "A complete landing page that holds together from mobile to desktop, with no image asset in the hero at all.",
+          "A complete landing page that works from mobile to desktop, with a drawer menu on small screens.",
         next: [
-          "The copy and the metrics are invented. They are there to make the layout legible, not to claim anything.",
-          "There is no back end behind it: the forms and calls to action do not submit anywhere.",
+          "The content and numbers are fictional. They are there to fill the layout.",
+          "There is no back end: forms and buttons don't send anything.",
         ],
       },
     },
@@ -134,24 +128,24 @@ export const en = {
     roles: [
       {
         company: "WTEC Energy",
-        role: "Front-end Developer",
+        role: "Software Developer (Frontend)",
         period: "May 2024 — Present",
         summary:
-          "Migrated the corporate system to React Native and TypeScript and shipped new features on top of it. Built the internal dashboards, and the company site in Next.js with multilingual support. Wrote the Node.js mail service behind its contact flow.",
+          "Own the front-end architecture of two new web applications in a monorepo, used by teams in the U.S. and India, and the front end of the company's identity and access platform. Drove the technical implementation of the operations app migration from .NET MAUI to React Native, and now review the sustaining team's pull requests. Built and maintain the company site in Next.js with multilingual support.",
       },
       {
         company: "Sinqia",
         role: "Frontend Developer",
         period: "Jun 2023 — May 2024",
         summary:
-          "Moved consórcio platforms for Banco do Brasil, Porto Seguro and Magazine Luiza off .NET and onto React and React Native. Set the code standards the rest of the team migrated against.",
+          "Worked on moving consortium platforms for Magazine Luiza, Porto Seguro and Banco do Brasil off .NET and onto React, React Native and Next.js. Started the Magazine Luiza front end as the sole developer and defined its structure and technical decisions. Fully remote, contract role.",
       },
       {
         company: "INNET Soluções",
-        role: "Front-end Developer",
+        role: "Web Developer & Systems Support",
         period: "Oct 2018 — Feb 2023",
         summary:
-          "Built and maintained web systems and e-commerce sites, including an internal sales management system in React and TypeScript. Integrated WooCommerce with the client's ERP over its API and added PIX, PicPay and Mercado Pago to checkout. Led technical support, SEO and performance work.",
+          "Built and maintained websites and e-commerce stores with WordPress and WooCommerce, configured the WooCommerce–ERP integration, and added PIX, PicPay and Mercado Pago to checkout. Co-developed an internal sales queue app in React and TypeScript, and later acted as the senior reference on the support team.",
       },
     ],
   },
@@ -159,9 +153,9 @@ export const en = {
   stack: {
     title: "Stack",
     legend:
-      "Split by honesty, not by category: the first group is what I ship in production, the second is what I'm still learning.",
-    productionLabel: "Shipping in production",
-    buildingLabel: "Learning right now",
+      "Split by honesty, not by category: what I build with today, and what I'm learning right now.",
+    productionLabel: "What I build with",
+    buildingLabel: "Currently learning",
     production: [
       "React",
       "React Native",
@@ -172,20 +166,18 @@ export const en = {
       "Zustand",
       "React Query",
       "React Hook Form",
-      "Jest",
-      "Testing Library",
       "Node.js",
       "REST APIs",
       "JWT",
       "Git",
       "NX monorepo",
     ],
-    building: ["Nest.js", "TypeORM", "Prisma", "PostgreSQL"],
+    building: ["Nest.js", "TypeORM", "Prisma", "PostgreSQL", "Jest", "Testing Library"],
   },
 
   contact: {
     title: "Get in touch",
-    body: "I'm open to remote roles with product teams. Email is the fastest way to reach me.",
+    body: "Email is the fastest way to reach me.",
     emailLabel: "Email",
     linkedinLabel: "LinkedIn",
     githubLabel: "GitHub",

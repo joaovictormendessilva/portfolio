@@ -10,9 +10,9 @@ export const pt: Dictionary = {
   },
 
   meta: {
-    title: "João Victor Mendes Silva — Desenvolvedor Full Stack",
+    title: "João Victor Mendes Silva — Desenvolvedor Frontend",
     description:
-      "Desenvolvedor full stack com sete anos construindo para a web, os últimos três em React e React Native. Disponível para trabalho remoto.",
+      "Desenvolvedor frontend com sete anos construindo para a web, os últimos três no ecossistema React, hoje expandindo para o desenvolvimento full stack.",
   },
 
   theme: {
@@ -28,10 +28,10 @@ export const pt: Dictionary = {
 
   hero: {
     name: "João Victor Mendes Silva",
-    role: "Desenvolvedor Full Stack",
+    role: "Desenvolvedor Frontend",
     headline: "Reconstruindo sistemas que não podem quebrar.",
-    lede: "Sete anos construindo para a web, os últimos três inteiramente em React e React Native. Tirei plataformas de consórcio do Banco do Brasil, Porto Seguro e Magazine Luiza de dentro do .NET, conduzi a arquitetura de front-end em todos os times por onde passei, e hoje também construo o back-end.",
-    location: "Linhares, Brasil — trabalho remoto",
+    lede: "Sete anos construindo para a web, os últimos três no ecossistema React. Sou responsável pela arquitetura front-end de novos sistemas em produção numa fabricante americana do setor de energia, atuei na migração de plataformas de consórcio do Magazine Luiza, Porto Seguro e Banco do Brasil para fora do .NET, e hoje estou expandindo para o back-end com NestJS e PostgreSQL.",
+    location: "Linhares, Brasil (UTC−3)",
     english: "Inglês B2 (EF SET)",
     primaryAction: "Ver os projetos",
     secondaryAction: "Me enviar e-mail",
@@ -49,18 +49,18 @@ export const pt: Dictionary = {
 
     projects: {
       "fantasmo-shop": {
-        summary: "Uma loja com sessão autenticada, carrinho e e-mail de pedido.",
+        summary: "Um projeto de estudo: uma loja com autenticação no servidor, carrinho e e-mail de pedido.",
         detail:
-          "A sessão foi construída do zero, não puxada de uma biblioteca: o token é assinado com jose, guardado em cookie httpOnly e verificado em toda rota protegida pelo proxy do Next 16, que limpa o cookie quando o token falha. O pedido concluído é renderizado como template do React Email e enviado por SMTP via Nodemailer.",
+          "Eu queria entender como o Next.js pode fazer uma autenticação real, validando o token da sessão no servidor sem expor esse token ao navegador. Rotas protegidas mandam quem não tem uma sessão válida de volta para o login. Os e-mails de pedido são feitos como um componente React e enviados pela minha própria configuração de SMTP, sem um serviço externo de e-mail.",
         limitation:
-          "Construído sem banco de dados, então o catálogo é estático e a verificação de credencial é um stub para a demonstração. Postgres com uma tabela de usuários real e comparação de senha com hash é o próximo passo.",
+          "Ainda não há banco de dados: a lista de produtos é estática, e qualquer e-mail e senha não vazios fazem login.",
       },
       "pulse-ai": {
-        summary: "Uma landing page de produto para um workspace de IA fictício.",
+        summary: "Uma landing page feita a partir de um design pronto, para praticar Tailwind e responsividade.",
         detail:
-          "O dashboard do topo não é uma imagem. Cada barra, linha, notificação e avatar é marcação estilizada com Tailwind, então ele continua nítido em qualquer resolução e se reorganiza em telas pequenas em vez de encolher como um print achatado.",
+          "Fiz esta página para ganhar mais prática com Tailwind e layouts responsivos. Segui um design feito no Visily o mais fielmente possível, como se uma equipe de design tivesse me entregado. O dashboard do topo é feito com classes do Tailwind, não com uma imagem.",
         limitation:
-          "Só front-end: não há back-end por trás, e os números exibidos são ilustrativos.",
+          "Só front-end: não há back-end, e o conteúdo e os números são fictícios.",
       },
     },
   },
@@ -75,55 +75,49 @@ export const pt: Dictionary = {
     studies: {
       "fantasmo-shop": {
         context:
-          "Uma loja construída para exercitar um fluxo de compra completo de ponta a ponta: catálogo, filtro, carrinho, sessão autenticada e um pedido que realmente sai do sistema em vez de parar num console.log.",
+          "Um projeto de estudo. Eu queria construir um fluxo de compra completo: login, lista de produtos com filtros, carrinho e e-mail de pedido.",
         challenge:
-          "O catálogo nunca foi a parte interessante. A sessão era. Eu queria proteção de rota acontecendo no servidor antes da página renderizar, um token que o próprio JavaScript da página não consegue ler, e um pedido concluído que produzisse algo que um cliente receberia.",
+          "O objetivo principal era a autenticação. Eu queria que o token da sessão fosse validado no servidor, sem que o navegador tivesse acesso a ele, e que usuários sem uma sessão válida voltassem para a tela de login.",
         decisions: [
           {
-            title: "Sessão escrita na mão",
-            body: "Assinei e verifiquei o token eu mesmo com jose em vez de instalar uma biblioteca de autenticação pronta, porque o objetivo era entender cada peça: o que vai no payload, como a expiração é definida, quais flags de cookie importam e o que deve acontecer quando a verificação falha. jose é baseada em promises e construída sobre Web Crypto, então se comporta igual em qualquer runtime.",
+            title: "O token fica num cookie httpOnly",
+            body: "O JavaScript do navegador não consegue ler esse cookie. O token é assinado com jose e verificado no proxy.ts antes das páginas protegidas carregarem. Se ele for inválido, o cookie é removido e o usuário volta para o login.",
           },
           {
-            title: "O token mora num cookie httpOnly",
-            body: "Não no localStorage. Script rodando na página não consegue ler um cookie httpOnly, o que fecha o caminho mais comum para roubar sessão via XSS. Ele também é marcado como secure em produção, escopado com sameSite lax, e expira em sete dias.",
-          },
-          {
-            title: "Um único lugar decide quem entra",
-            body: "A proteção de rota fica no proxy.ts, então as rotas casadas são checadas antes de qualquer coisa renderizar. Um token que falha na verificação não é só rejeitado: o cookie é apagado na saída, então o navegador para de apresentar uma credencial que nunca mais vai funcionar.",
-          },
-          {
-            title: "O e-mail do pedido é um componente, não uma string",
-            body: "Os e-mails de confirmação são renderizados como templates do React Email em vez de HTML concatenado dentro de um serviço. O e-mail é tipado, revisável num pull request e versionado junto com o resto da interface, que é o que o torna sustentável.",
+            title: "E-mails de pedido sem serviço externo",
+            body: "O template do e-mail é um componente React, feito como uma página do site. Ele é renderizado em HTML e enviado pela minha própria configuração de SMTP com Nodemailer, então o projeto não depende de um serviço externo de e-mail.",
           },
         ],
         result:
-          "Login, dashboard protegido, catálogo com filtro, carrinho, e um pedido que chega como e-mail formatado por SMTP.",
+          "Login, dashboard protegido, lista de produtos com filtros, carrinho e e-mail de confirmação do pedido.",
         next: [
-          "Adicionar Postgres e uma tabela de usuários real, para que as credenciais sejam comparadas contra senhas com hash em vez de ficarem como stub para a demonstração. O bcryptjs já é dependência do projeto; ele ainda não está ligado.",
-          "Falhar alto quando JWT_SECRET estiver ausente. Hoje ele cai para string vazia e apenas emite um aviso, o que significa que um deploy mal configurado assinaria tokens que qualquer pessoa poderia forjar. Deveria lançar erro no boot.",
-          "Verificar a sessão dentro de cada route handler, não só no proxy. A própria documentação do Next avisa que uma mudança de matcher pode remover a cobertura do proxy silenciosamente, e um único ponto de controle é um único ponto de falha.",
+          "Verificar os usuários e carregar os produtos a partir de um banco PostgreSQL.",
         ],
       },
       "pulse-ai": {
         context:
-          "Uma landing page para um workspace de IA fictício, construída para praticar o gênero direito: hero, capacidades, métricas, prova social, preços, FAQ e chamada final.",
+          "Uma landing page para um produto de IA fictício, com hero, funcionalidades, métricas, depoimentos, preços, perguntas frequentes e uma chamada final.",
         challenge:
-          "O hero precisava de uma imagem do produto e não havia produto. Exportar uma imagem achatada teria sido a resposta rápida, e teria ficado errada em metade das telas que abrissem a página.",
+          "Dois objetivos: ganhar prática com o Tailwind e fazer cada seção funcionar bem do celular ao desktop, mantendo a fidelidade ao design.",
         decisions: [
           {
-            title: "O dashboard é marcação, não figura",
-            body: "Cada barra, linha de atividade, cartão de notificação e avatar do hero é um elemento real estilizado com Tailwind. Continua nítido em qualquer tela, não adiciona nada para baixar, e se reorganiza numa tela estreita em vez de encolher até virar algo ilegível.",
+            title: "Seguir o design como se viesse de uma equipe de design",
+            body: "Usei o design do Visily como referência e tentei reproduzir espaçamentos, cores e layout em vez de improvisar.",
           },
           {
-            title: "A ilustração é composta, não um bloco só",
-            body: "Cada pedaço dela é um componente próprio, então o hero se lê como uma pequena árvore de partes nomeadas em vez de um trecho gigante e ingovernável de JSX. Mudar uma barra do gráfico não exige rolar a página inteira.",
+            title: "Componentes pequenos e reutilizáveis",
+            body: "Botões, cards, chips, títulos de seção e o container da página são componentes compartilhados, então todas as seções são montadas com as mesmas peças.",
+          },
+          {
+            title: "O dashboard do topo é feito com Tailwind",
+            body: "Em vez de um print, a ilustração do topo é construída com HTML e classes do Tailwind, então continua nítida e se adapta a telas menores.",
           },
         ],
         result:
-          "Uma landing page completa que se sustenta do mobile ao desktop, sem nenhum arquivo de imagem no hero.",
+          "Uma landing page completa que funciona do celular ao desktop, com menu lateral (drawer) em telas pequenas.",
         next: [
-          "O texto e as métricas são inventados. Estão ali para tornar o layout legível, não para afirmar nada.",
-          "Não há back-end por trás: os formulários e chamadas para ação não enviam para lugar nenhum.",
+          "O conteúdo e os números são fictícios. Estão ali para preencher o layout.",
+          "Não há back-end: formulários e botões não enviam nada.",
         ],
       },
     },
@@ -136,24 +130,24 @@ export const pt: Dictionary = {
     roles: [
       {
         company: "WTEC Energy",
-        role: "Desenvolvedor Front-end",
+        role: "Desenvolvedor de Software (Frontend)",
         period: "Mai 2024 — Atual",
         summary:
-          "Migrei o sistema corporativo para React Native e TypeScript e entreguei novas funcionalidades sobre ele. Construí os dashboards internos e o site institucional em Next.js com suporte multilíngue. Escrevi o serviço de e-mail em Node.js por trás do fluxo de contato.",
+          "Sou responsável pela arquitetura front-end de duas novas aplicações web em monorepo, usadas por equipes nos EUA e na Índia, e pelo front-end da plataforma de identidade e acessos da empresa. Conduzi a implementação técnica da migração do app de operações de .NET MAUI para React Native e hoje reviso os pull requests do time de sustentação. Desenvolvi e mantenho o site institucional em Next.js com suporte multilíngue.",
       },
       {
         company: "Sinqia",
         role: "Desenvolvedor Frontend",
         period: "Jun 2023 — Mai 2024",
         summary:
-          "Levei plataformas de consórcio do Banco do Brasil, Porto Seguro e Magazine Luiza do .NET para React e React Native. Defini os padrões de código que o restante do time seguiu na migração.",
+          "Atuei na migração de plataformas de consórcio do Magazine Luiza, Porto Seguro e Banco do Brasil do .NET para React, React Native e Next.js. Iniciei o front-end do Magazine Luiza como único desenvolvedor e defini sua estrutura e decisões técnicas. Contrato PJ, 100% remoto.",
       },
       {
         company: "INNET Soluções",
-        role: "Desenvolvedor Front-end",
+        role: "Desenvolvedor Web e Suporte de Sistemas",
         period: "Out 2018 — Fev 2023",
         summary:
-          "Construí e mantive sistemas web e e-commerces, incluindo um sistema interno de gerenciamento de vendas em React e TypeScript. Integrei o WooCommerce ao ERP do cliente pela API e adicionei PIX, PicPay e Mercado Pago ao checkout. Conduzi o suporte técnico e o trabalho de SEO e performance.",
+          "Desenvolvi e mantive sites e lojas virtuais com WordPress e WooCommerce, configurei a integração entre o WooCommerce e o ERP e adicionei PIX, PicPay e Mercado Pago ao checkout. Desenvolvi, junto com outro dev, um sistema interno de lista da vez em React e TypeScript, e depois atuei como referência sênior da equipe de suporte.",
       },
     ],
   },
@@ -161,8 +155,8 @@ export const pt: Dictionary = {
   stack: {
     title: "Stack",
     legend:
-      "Dividido por honestidade, não por categoria: o primeiro grupo é o que eu entrego em produção, o segundo é o que ainda estou aprendendo.",
-    productionLabel: "Entrego em produção",
+      "Dividido por honestidade, não por categoria: o que eu uso para construir hoje e o que estou aprendendo agora.",
+    productionLabel: "O que uso para construir",
     buildingLabel: "Aprendendo agora",
     production: [
       "React",
@@ -174,20 +168,18 @@ export const pt: Dictionary = {
       "Zustand",
       "React Query",
       "React Hook Form",
-      "Jest",
-      "Testing Library",
       "Node.js",
       "APIs REST",
       "JWT",
       "Git",
       "NX monorepo",
     ],
-    building: ["Nest.js", "TypeORM", "Prisma", "PostgreSQL"],
+    building: ["Nest.js", "TypeORM", "Prisma", "PostgreSQL", "Jest", "Testing Library"],
   },
 
   contact: {
     title: "Vamos conversar",
-    body: "Estou aberto a vagas remotas em times de produto. E-mail é o jeito mais rápido de me encontrar.",
+    body: "E-mail é o jeito mais rápido de me encontrar.",
     emailLabel: "E-mail",
     linkedinLabel: "LinkedIn",
     githubLabel: "GitHub",
