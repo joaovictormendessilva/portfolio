@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { locales, type Locale } from "@/lib/i18n/config";
 
@@ -20,7 +19,7 @@ export function LanguageSwitch({ current, label, names }: LanguageSwitchProps) {
         const href = pathname.replace(`/${current}`, `/${locale}`);
 
         return (
-          <Link
+          <a
             key={locale}
             href={href}
             hrefLang={locale}
@@ -32,7 +31,7 @@ export function LanguageSwitch({ current, label, names }: LanguageSwitchProps) {
             }
           >
             {names[locale]}
-          </Link>
+          </a>
         );
       })}
     </nav>
