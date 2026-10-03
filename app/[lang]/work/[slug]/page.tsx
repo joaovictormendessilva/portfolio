@@ -6,6 +6,7 @@ import { ArrowLeft, ArrowUpRight } from "lucide-react";
 import { getDictionary } from "@/lib/i18n";
 import { isLocale, locales } from "@/lib/i18n/config";
 import { projects } from "@/lib/content/projects";
+import { getSiteUrl } from "@/lib/site-url";
 import { SiteHeader } from "../../_components/site-header/SiteHeader";
 import { SiteFooter } from "../../_components/site-footer/SiteFooter";
 import type { Dictionary } from "@/lib/i18n";
@@ -30,9 +31,12 @@ export async function generateMetadata(
 
   const dict = getDictionary(lang);
   const title = `${project.name} — ${dict.hero.name}`;
-  const description = dict.work.projects[slug as StudyKey].summary;
+  const { summary: description, detail } = dict.work.projects[slug as StudyKey];
   const url = `/${lang}/work/${slug}`;
   const { openGraph, twitter } = await parent;
+  const projectImage = project.image
+    ? { url: new URL(project.image, getSiteUrl()).toString(), alt: project.name }
+    : undefined;
 
   return {
     title,
@@ -45,17 +49,17 @@ export async function generateMetadata(
     },
     openGraph: {
       title,
-      description,
+      description: detail,
       url,
       type: "article",
       locale: lang === "pt" ? "pt_BR" : "en_US",
-      images: openGraph?.images,
+      images: projectImage ?? openGraph?.images,
     },
     twitter: {
       card: "summary_large_image",
       title,
       description,
-      images: twitter?.images,
+      images: projectImage ?? twitter?.images,
     },
   };
 }
