@@ -1,3 +1,4 @@
+import type { Metadata, ResolvingMetadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -17,9 +18,10 @@ export function generateStaticParams() {
   );
 }
 
-export async function generateMetadata({
-  params,
-}: PageProps<"/[lang]/work/[slug]">) {
+export async function generateMetadata(
+  { params }: PageProps<"/[lang]/work/[slug]">,
+  parent: ResolvingMetadata,
+): Promise<Metadata> {
   const { lang, slug } = await params;
   if (!isLocale(lang)) return {};
 
@@ -27,10 +29,34 @@ export async function generateMetadata({
   if (!project) return {};
 
   const dict = getDictionary(lang);
+  const title = `${project.name} — ${dict.hero.name}`;
+  const description = dict.work.projects[slug as StudyKey].summary;
+  const url = `/${lang}/work/${slug}`;
+  const { openGraph, twitter } = await parent;
 
   return {
-    title: `${project.name} — ${dict.hero.name}`,
-    description: dict.work.projects[slug as StudyKey].summary,
+    title,
+    description,
+    alternates: {
+      canonical: url,
+      languages: Object.fromEntries(
+        locales.map((locale) => [locale, `/${locale}/work/${slug}`]),
+      ),
+    },
+    openGraph: {
+      title,
+      description,
+      url,
+      type: "article",
+      locale: lang === "pt" ? "pt_BR" : "en_US",
+      images: openGraph?.images,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: twitter?.images,
+    },
   };
 }
 
